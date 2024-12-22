@@ -1,35 +1,36 @@
 pipeline {
-  agent any
-  stages {
-    stage("test") {
-      steps {
-        script {
-          echo "Testing the application...."
-          echo "Executing pipeline for branch $BRANCH_NAME" 
-        }
-      }
-    }
+    agent any
 
-    stage("build") {
-      when { 
-        expression { BRANCH_NAME == "master" } 
-      }
-      steps {
-        script {
-          echo "Building the application...."
+    stages {
+        stage('Test') {
+            steps {
+                script {
+                    echo "Testing the application..."
+                    echo "Executing pipeline for branch ${BRANCH_NAME}" 
+                }
+            }
         }
-      }
-    }
 
-    stage("deploy") {
-      when { 
-        expression { BRANCH_NAME == "master" }
-      }
-      steps {
-        script {
-          echo "Deploying the application...."
+        stage('Build') {
+            when {
+                expression { BRANCH_NAME == 'main' } 
+            }
+            steps {
+                script {
+                    echo "Building the application..."
+                }
+            }
         }
-      }
+
+        stage('Deploy') {
+            when {
+                expression { BRANCH_NAME == 'main' }
+            }
+            steps {
+                script {
+                    echo "Deploying the application..."
+                }
+            }
+        }
     }
-  }
 }
