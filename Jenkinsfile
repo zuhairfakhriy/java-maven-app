@@ -5,35 +5,52 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
+    environment {
+        DOCKER_IMAGE = 'azeshion21/demo-app:jma-3.0'
+    }
     stages {
-        stage("init") {
+        stage("Initialize") {
             steps {
                 script {
-                    gv = load "script.groovy" 
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage("build jar") {
+        stage("Build JAR") {
             steps {
                 script {
-                    gv.buildJar() 
+                    try {
+                        gv.buildJar()
+                    } catch (Exception e) {
+                        echo "Error building JAR: ${e.message}"
+                        throw e
+                    }
                 }
             }
         }
-        stage("build image") {
+        stage("Build Docker Image") {
             steps {
                 script {
-                    gv.buildImage 'azeshion21/demo-app:jma-3.0'
+                    try {
+                        gv.buildImage(env.DOCKER_IMAGE)
+                    } catch (Exception e) {
+                        echo "Error building Docker image: ${e.message}"
+                        throw e
+                    }
                 }
             }
         }
-        stage("deploy") {
+        stage("Deploy to Production") {
             steps {
                 script {
-                    gv.deployApp() 
+                    try {
+                        gv.deployApp()
+                    } catch (Exception e) {
+                        echo "Error deploying application: ${e.message}"
+                        throw e
+                    }
                 }
             }
         }
     }
 }
-
