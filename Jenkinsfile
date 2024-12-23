@@ -23,7 +23,7 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    gv.buildImage() 
+                    gv.buildImage 'azeshion21/demo-app:jma-3.0'
                 }
             }
         }
